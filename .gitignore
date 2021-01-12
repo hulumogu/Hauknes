@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Hauknes specific
+ftp_credentials.json
+tmp/
+.vs/
+
