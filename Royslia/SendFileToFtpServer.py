@@ -14,11 +14,18 @@ with open('/home/pi/work/ftp_credentials.json') as json_file:
 # copy file to ftp server
 now = datetime.now()
 current_hour = now.strftime("%H")
-file_path_json = Path('/home/pi/work/tmp/'+ current_hour + '.json')
-file_path_image = Path('/home/pi/work/tmp/'+ current_hour + '.jpg')
+dayofweek = now.weekday()
+
+basefileName = '/home/pi/work/tmp/'+str(dayofweek + 1)+'_'+current_hour
+file_path_json = Path(basefileName + '.json')
+file_path_image = Path(basefileName + '.jpg')
+file_path_image_thumbnail = Path(basefileName + '_thumbnail.jpg')
 
 with FTP(site, user, password) as ftp, open(file_path_json, 'rb') as file:
         ftp.storbinary(f"STOR images/royslia/{file_path_json.name}", file)
 
 with FTP(site, user, password) as ftp, open(file_path_image, 'rb') as file:
         ftp.storbinary(f"STOR images/royslia/"+file_path_image.name+"", file)
+        
+with FTP(site, user, password) as ftp, open(file_path_image, 'rb') as file:
+        ftp.storbinary(f"STOR images/royslia/"+file_path_image_thumbnail.name+"", file)
