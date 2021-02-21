@@ -22,10 +22,10 @@ file_path_image = Path(basefileName + '.jpg')
 file_path_image_thumbnail = Path(basefileName + '_thumbnail.jpg')
 
 with FTP(site, user, password) as ftp, open(file_path_json, 'rb') as file:
-        ftp.storbinary(f"STOR images/royslia/{file_path_json.name}", file)
+        ftp.storbinary(f"STOR www/images/royslia/{file_path_json.name}", file)
 
 with FTP(site, user, password) as ftp, open(file_path_image, 'rb') as file:
-        ftp.storbinary(f"STOR images/royslia/"+file_path_image.name+"", file)
+        ftp.storbinary(f"STOR www/images/royslia/"+file_path_image.name+"", file)
         
-with FTP(site, user, password) as ftp, open(file_path_image, 'rb') as file:
-        ftp.storbinary(f"STOR images/royslia/"+file_path_image_thumbnail.name+"", file)
+with FTP(site, user, password) as ftp, open(file_path_image_thumbnail, 'rb') as file:
+        ftp.storbinary(f"STOR www/images/royslia/"+file_path_image_thumbnail.name+"", file)

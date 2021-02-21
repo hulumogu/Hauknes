@@ -4,7 +4,16 @@ from datetime import datetime
 from datetime import date
 from PIL import Image
 import json
+import os
+import glob
 
+#remove old data in tmp folder
+files = glob.glob('/home/pi/work/tmp/*')
+for f in files:
+    os.remove(f)
+
+
+# date, time stuff
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 today = date.today()
