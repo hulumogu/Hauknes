@@ -49,49 +49,61 @@
 		<div class="scrollmenu">
 
 	<?php
+//		$day_number = date('N');
 		// push all json data into a new array
 		$imageDataArray = array();
-		for ($x = 0; $x <= 23; $x++) 
+
+		$numPictures = 0;
+		for ($day_number = 1; $day_number <= 7; $day_number++)
 		{
-			$formatted_value = sprintf("%02d", $x);
-
-			$time = "01:01:00";
-			$date = "01/01/2011";
+			for ($x = 0; $x <= 23; $x++) 
 			{
-				$string = file_get_contents("../images/royslia/$formatted_value.json");
-				if ($string === false) {
-					echo "file_get_contents failed";
-				}
+				$formatted_value = sprintf("%d_%02d", $day_number, $x);
 
-				$json_a = json_decode($string, true);
-				if ($json_a === null) {
-					echo "json_decode failed";
-				}
-
-				foreach ($json_a as $key => $data) 
+				$time = "01:01:00";
+				$date = "01/01/2011";
 				{
-					if ($key === "imageinfo" && is_array($data))
+					$jsonFileName = "../images/royslia/$formatted_value.json";
+					if (file_exists($jsonFileName))
 					{
-						foreach ($data as $childKey => $childData) 
+						$string = file_get_contents($jsonFileName);
+						if ($string === false) {
+							echo "file_get_contents failed";
+						}
+
+						$json_a = json_decode($string, true);
+						if ($json_a === null) {
+							echo "json_decode failed";
+						}
+
+						foreach ($json_a as $key => $data) 
 						{
-							if (is_array($data))
+							if ($key === "imageinfo" && is_array($data))
 							{
-								$time = $childData['time'];
-								$date = $childData['date'];
-								array_push($imageDataArray, array($date . '-' . $time, $formatted_value, $date, $time));
+								foreach ($data as $childKey => $childData) 
+								{
+									if (is_array($data))
+									{
+										$time = $childData['time'];
+										$date = $childData['date'];
+										array_push($imageDataArray, array($date . '-' . $time, $formatted_value, $date, $time));
+										$numPictures++;
+									}
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+		$numPictures--;
 
 		// sort our $date . '-' . $time string so that we get the newest imagest first
 		rsort($imageDataArray);
 	
-		for ($x = 0; $x <= 23; $x++) 
+		for ($x = 0; $x <= $numPictures; $x++) 
 		{
-			echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1].".jpg' width='10%' height='10%' style='' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."'>
+			echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' width='10%' height='10%' style='' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."'>
 			";
 		}
 	?>
@@ -108,6 +120,7 @@
 	</footer>
 
 	<script>
+		var numPictures = <?php echo $numPictures; ?>;
 		var selectedImage = 0;
 		
 		var start = null;
@@ -137,7 +150,7 @@
 				if(end < start - offset )
 				{
 					var expandImg = document.getElementById("expandedImg");
-					if (selectedImage < 23)
+					if (selectedImage < numPictures)
 					{
 						selectedImage++;
 						var img = document.getElementById(selectedImage);
@@ -164,14 +177,20 @@
 
 			// first remove style around image
 			var i;
-			for (i = 0; i <= 23; i++) 
+			for (i = 0; i <= numPictures; i++) 
 			{
 				var img = document.getElementById(i);
 				img.style = "";
 			}
 
 			var expandImg = document.getElementById("expandedImg");
-			expandImg.src = imgs.src;
+
+			// remove thumbnail from src name
+			var srcHiRes = imgs.src;
+			var posSplit = srcHiRes.indexOf("_thumbnail");
+			srcHiRes = srcHiRes.substring(0, posSplit);
+			expandImg.src = srcHiRes + ".jpg";
+
 			imgs.style = "border:1px solid white";
 			expandImg.parentElement.style.display = "block";
 		
