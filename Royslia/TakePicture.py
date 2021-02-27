@@ -34,16 +34,35 @@ camera.capture(pictureFileName + '_thumbnail.jpg')
 camera.resolution = (4056, 3040)
 camera.framerate = 1
 sleep(5)
-pictureFileName = '/home/pi/work/tmp/'+str(dayofweek + 1)+'_'+current_hour 
 camera.capture(pictureFileName + '.jpg')
 camera.stop_preview()
 camera.close()
+
+#now some code to find average rgb values in picture. Used to identify night pictures
+pictureFileNameThumbnail = pictureFileName + '_thumbnail.jpg' 
+im = Image.open(pictureFileNameThumbnail)
+img = im.load()
+width, height = im.size
+RSum = 0
+GSum = 0
+BSum = 0
+for x in range(width):
+    for y in range(height):
+        R,G,B=img[x,y]
+        RSum += R
+        GSum += G
+        BSum += B
+im.close()
+RSum = RSum / (width * height)
+GSum = GSum / (width * height)
+BSum = BSum / (width * height)
+rgb_average = ((RSum + GSum +BSum) / 3.0) / 255.0;
 
 # Create json file with metadata
 data = {}
 data['imageinfo'] = []
 data['imageinfo'].append({
-    'rgb_average': 0.5,
+    'rgb_average': rgb_average,
     'time' : current_time,
     'date' : current_date
 })
@@ -53,12 +72,4 @@ with open(pictureFileName + '.json', 'w') as outfile:
     json.dump(data, outfile)
 
 
-# Make a thumbnail for picture
-# this did not work with the 4056, 3040, but works with lower resolutions
-#pictureFileNameThumbnail = pictureFileName + '_thumbnail.jpg' 
-#fd_image = open(pictureFileName + '.jpg', 'r')
-#img = Image.open(fd_image)
-#img.thumbnail((400,300))
-#img.save(pictureFileNameThumbnail)
-#fd_image.close()
 
