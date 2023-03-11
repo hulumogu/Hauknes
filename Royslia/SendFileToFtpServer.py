@@ -1,6 +1,7 @@
 from ftplib import FTP
 from pathlib import Path
 from datetime import datetime
+from datetime import date
 import json
 
 # Get ftp login data from json file
@@ -13,10 +14,12 @@ with open('/home/pi/work/ftp_credentials.json') as json_file:
 
 # copy file to ftp server
 now = datetime.now()
+today = date.today()
+current_date = today.strftime("%Y-%m-%d")
+#get hour. Will be our filename
 current_hour = now.strftime("%H")
-dayofweek = now.weekday()
 
-basefileName = '/home/pi/work/tmp/'+str(dayofweek + 1)+'_'+current_hour
+basefileName = '/home/pi/work/tmp/'+current_date+'-'+current_hour
 file_path_json = Path(basefileName + '.json')
 file_path_image = Path(basefileName + '.jpg')
 file_path_image_thumbnail = Path(basefileName + '_thumbnail.jpg')

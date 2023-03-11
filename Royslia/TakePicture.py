@@ -15,19 +15,18 @@ for f in files:
 
 # date, time stuff
 now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
 today = date.today()
-current_date = today.strftime("%d/%m/%Y")
+current_date = today.strftime("%Y-%m-%d")
 #get hour. Will be our filename
 current_hour = now.strftime("%H")
-dayofweek = today.weekday()
+#dayofweek = today.weekday()
 
 # Take the picture
 camera = PiCamera()
 #camera.start_preview(alpha=200)
 camera.resolution = (400, 300)
 sleep(5)
-pictureFileName = '/home/pi/work/tmp/'+str(dayofweek + 1)+'_'+current_hour 
+pictureFileName = '/home/pi/work/tmp/'+current_date+'-'+current_hour 
 camera.capture(pictureFileName + '_thumbnail.jpg')
 
 # below two setting needed to increase(double) video size on raspberry to work
@@ -59,6 +58,7 @@ BSum = BSum / (width * height)
 rgb_average = ((RSum + GSum +BSum) / 3.0) / 255.0;
 
 # Create json file with metadata
+current_time = now.strftime("%H:%M:%S")
 data = {}
 data['imageinfo'] = []
 data['imageinfo'].append({
