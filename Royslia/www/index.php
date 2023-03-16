@@ -15,12 +15,13 @@
             color: white;
         }
 		div.scrollmenu {
-			background-color: #333;
-			overflow: auto;
+			background-color: #666;
+			overflow-y: scroll;
 			white-space: nowrap;
+			width: 20%;
+			height: calc(100vh - 50px)
 		}
 		div.scrollmenu a {
-			display: inline-block;
 			color: white;
 			text-align: center;
 			padding: 14px;
@@ -36,6 +37,16 @@
 			opacity: 0.5;
 			cursor: pointer;
 		}
+		/* Container for flexboxes */
+		div.row {
+		  display: -webkit-flex;
+		  display: flex;
+		}
+
+		div.right {
+		  height: 100%;
+		  width: 80%;
+		}
 	</style>
 </head>
 
@@ -45,49 +56,58 @@
 		<h2>Røyslia</h2>
 	</header>
 
-	<nav>
+	<div class="row">
 		<div class="scrollmenu">
 
-	<?php
-//		$day_number = date('N');
-		// push all json data into a new array
-		$imageDataArray = array();
+		<?php
+	//		$day_number = date('N');
+			// push all json data into a new array
+			$imageDataArray = array();
 
-		$numPictures = 0;
-		for ($day_number = 1; $day_number <= 7; $day_number++)
-		{
-			for ($x = 0; $x <= 23; $x++) 
+			$numPictures = 0;
+			for ($day_number = 1; $day_number <= 7; $day_number++)
 			{
-				$formatted_value = sprintf("%d_%02d", $day_number, $x);
-
-				$time = "01:01:00";
-				$date = "01/01/2011";
+				for ($x = 0; $x <= 23; $x++) 
 				{
-					$jsonFileName = "../images/royslia/$formatted_value.json";
-					if (file_exists($jsonFileName))
+					$formatted_value = sprintf("%d_%02d", $day_number, $x);
+
+					$time = "01:01:00";
+					$date = "01/01/2011";
 					{
-						$string = file_get_contents($jsonFileName);
-						if ($string === false) {
-							echo "file_get_contents failed";
-						}
-
-						$json_a = json_decode($string, true);
-						if ($json_a === null) {
-							echo "json_decode failed";
-						}
-
-						foreach ($json_a as $key => $data) 
+						$jsonFileName = "../images/royslia/$formatted_value.json";
+						if (file_exists($jsonFileName))
 						{
-							if ($key === "imageinfo" && is_array($data))
+							$string = file_get_contents($jsonFileName);
+							if ($string === false) {
+								echo "file_get_contents failed";
+							}
+
+							$json_a = json_decode($string, true);
+							if ($json_a === null) {
+								echo "json_decode failed";
+							}
+
+							foreach ($json_a as $key => $data) 
 							{
-								foreach ($data as $childKey => $childData) 
+								if ($key === "imageinfo" && is_array($data))
 								{
-									if (is_array($data))
+									foreach ($data as $childKey => $childData) 
 									{
-										$time = $childData['time'];
-										$date = $childData['date'];
-										array_push($imageDataArray, array($date . '-' . $time, $formatted_value, $date, $time));
-										$numPictures++;
+										if (is_array($data))
+										{
+											$rgb_average = $childData['rgb_average'];
+											if ($rgb_average > 0.1)
+											{
+												$time = $childData['time'];
+												$date = $childData['date'];
+												$day = substr($date, 0, 2);
+												$month = substr($date, 3, 2);
+												$year = substr($date, 6, 4);
+										
+												array_push($imageDataArray, array($year . '-' . $month . '-' . $day . '-' . $time, $formatted_value, $date, $time));
+												$numPictures++;
+											}
+										}
 									}
 								}
 							}
@@ -95,25 +115,23 @@
 					}
 				}
 			}
-		}
-		$numPictures--;
+			$numPictures--;
 
-		// sort our $date . '-' . $time string so that we get the newest imagest first
-		rsort($imageDataArray);
+			// sort our $date . '-' . $time string so that we get the newest imagest first
+			rsort($imageDataArray);
 	
-		for ($x = 0; $x <= $numPictures; $x++) 
-		{
-			echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' width='10%' height='10%' style='' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."'>
-			";
-		}
-	?>
+			for ($x = 0; $x <= $numPictures; $x++) 
+			{
+				echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."' >
+				<br>
+				";
+			}
+		?>
 		</div>
-	</nav>
-
-	<article>
-		<img id="expandedImg" src='../images/royslia/<?php echo $imageDataArray[0][1]; ?>.jpg' style="width:100%">
-	</article>
-	
+		<div class="right">
+			<img id="expandedImg" src='../images/royslia/<?php echo $imageDataArray[0][1]; ?>.jpg' style="width:100%;" >
+		</div>
+	</div>	
 	<footer>
 		Date : <span id="id_date"><?php echo $imageDataArray[0][2]; ?></span><br>
 		Time : <span id="id_time"><?php echo $imageDataArray[0][3]; ?></span><br>
@@ -180,7 +198,7 @@
 			for (i = 0; i <= numPictures; i++) 
 			{
 				var img = document.getElementById(i);
-				img.style = "";
+				img.style = "width:100%;";
 			}
 
 			var expandImg = document.getElementById("expandedImg");
@@ -191,7 +209,7 @@
 			srcHiRes = srcHiRes.substring(0, posSplit);
 			expandImg.src = srcHiRes + ".jpg";
 
-			imgs.style = "border:1px solid white";
+			imgs.style = "width:100%;border:2px solid white";
 			expandImg.parentElement.style.display = "block";
 		
 			var dateElem = document.getElementById("id_date");
