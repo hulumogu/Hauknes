@@ -60,19 +60,24 @@
 		<div class="scrollmenu">
 
 		<?php
-	//		$day_number = date('N');
 			// push all json data into a new array
 			$imageDataArray = array();
 
 			$numPictures = 0;
-			for ($day_number = 1; $day_number <= 7; $day_number++)
+			for ($day_number = 1; $day_number <= 10; $day_number++)
 			{
-				for ($x = 0; $x <= 23; $x++) 
+				for ($hour = 0; $hour <= 23; $hour++) 
 				{
-					$formatted_value = sprintf("%d_%02d", $day_number, $x);
+					$someDaysAgo = mktime($hour, 0, 0, date("m"), date("d")-$day_number,date("Y"));
+					//$formatted_value = sprintf("%d_%02d", $day_number, $x);
+					$formatted_value = date("Y-m-d-G", $someDaysAgo);
 
-					$time = "01:01:00";
-					$date = "01/01/2011";
+
+					$time = date("G:00:00", $someDaysAgo);
+					$date = date("d-m-Y", $someDaysAgo);
+#				    echo "<img id='$hour' src='../images/royslia/".$formatted_value."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$time."' data-date='".$date."' >
+#									<br>
+#				";
 					{
 						$jsonFileName = "../images/royslia/$formatted_value.json";
 						if (file_exists($jsonFileName))
@@ -96,15 +101,16 @@
 										if (is_array($data))
 										{
 											$rgb_average = $childData['rgb_average'];
-											if ($rgb_average > 0.1)
+#											if ($rgb_average > 0.1)
 											{
-												$time = $childData['time'];
-												$date = $childData['date'];
-												$day = substr($date, 0, 2);
-												$month = substr($date, 3, 2);
-												$year = substr($date, 6, 4);
+												#$time = $childData['time'];
+												#$date = $childData['date'];
+												#$day = substr($date, 0, 2);
+												#$month = substr($date, 3, 2);
+												#$year = substr($date, 6, 4);
 										
-												array_push($imageDataArray, array($year . '-' . $month . '-' . $day . '-' . $time, $formatted_value, $date, $time));
+												#array_push($imageDataArray, array($year . '-' . $month . '-' . $day . '-' . $time, $formatted_value, $date, $time));
+												array_push($imageDataArray, array($formatted_value, $formatted_value, $date, $time));
 												$numPictures++;
 											}
 										}
