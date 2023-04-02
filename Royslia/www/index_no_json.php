@@ -63,7 +63,7 @@
 			// push all json data into a new array
 			$imageDataArray = array();
 
-			$numPictures = 0;
+			$numPictures = 0; #hallo
 			for ($day_number = 1; $day_number <= 10; $day_number++)
 			{
 				for ($hour = 0; $hour <= 23; $hour++) 
