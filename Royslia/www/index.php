@@ -64,7 +64,7 @@
 			$imageDataArray = array();
 
 			$numPictures = 0;
-			for ($day_number = 1; $day_number <= 10; $day_number++)
+			for ($day_number = 0; $day_number <= 10; $day_number++)
 			{
 				for ($hour = 0; $hour <= 23; $hour++) 
 				{
