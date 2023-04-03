@@ -69,10 +69,10 @@
 				for ($hour = 0; $hour <= 23; $hour++) 
 				{
 					$someDaysAgo = mktime($hour, 0, 0, date("m"), date("d")-$day_number,date("Y"));
-					$formatted_value = date("Y-m-d-G", $someDaysAgo);
+					$formatted_value = date("Y-m-d-h", $someDaysAgo);
 
 
-					$time = date("G:00:00", $someDaysAgo);
+					$time = date("h:00:00", $someDaysAgo);
 					$date = date("d-m-Y", $someDaysAgo);
 #				    echo "<img id='$hour' src='../images/royslia/".$formatted_value."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$time."' data-date='".$date."' >
 #									<br>
