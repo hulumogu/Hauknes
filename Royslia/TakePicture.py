@@ -70,6 +70,12 @@ data['imageinfo'].append({
 
 with open(pictureFileName + '.json', 'w') as outfile:
     json.dump(data, outfile)
+    
+#remove files if night
+if rgb_average < 0.1:
+    files = glob.glob('/home/pi/work/tmp/*')
+    for f in files:
+        os.remove(f)
 
 
 
