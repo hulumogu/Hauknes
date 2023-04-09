@@ -95,18 +95,29 @@
 							{
 								if ($key === "imageinfo" && is_array($data))
 								{
+								    $rgb_average = 0;
+									$temperature_inside = 0;
+									$temperature_outside = 0;
 									foreach ($data as $childKey => $childData) 
 									{
 										if (is_array($data))
 										{
-											$rgb_average = $childData['rgb_average'];
-											if ($rgb_average > 0.1)
+											// more than one application add data to json file, so add them as they coma as childs
+											if (isset($childData['rgb_average']))
 											{
-												array_push($imageDataArray, array($formatted_value, $formatted_value, $date, $time));
-												$numPictures++;
+												$rgb_average = $childData['rgb_average'];
+											}
+
+											if (isset($childData['temperature_inside']))
+											{
+												$temperature_inside = $childData['temperature_inside'];
+												$temperature_outside = $childData['temperature_outside'];
 											}
 										}
 									}
+		
+									array_push($imageDataArray, array($formatted_value, $formatted_value, $date, $time, $temperature_inside, $temperature_outside));
+									$numPictures++;
 								}
 							}
 						}
@@ -119,7 +130,7 @@
 	
 			for ($x = 0; $x <= $numPictures; $x++) 
 			{
-				echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."' >
+				echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."' data-temperature_inside='".$imageDataArray[$x][4]."' data-temperature_outside='".$imageDataArray[$x][5]."' >
 				<br>
 				";
 			}
@@ -132,6 +143,8 @@
 	<footer>
 		Date : <span id="id_date"><?php echo $imageDataArray[0][2]; ?></span><br>
 		Time : <span id="id_time"><?php echo $imageDataArray[0][3]; ?></span><br>
+		Temperature inside : <span id="id_temperature_inside"><?php echo $imageDataArray[0][4]; ?></span><br>
+		Temperature outside : <span id="id_temperature_outside"><?php echo $imageDataArray[0][5]; ?></span><br>
 	</footer>
 
 	<script>
@@ -214,6 +227,12 @@
 			
 			var timeElem = document.getElementById("id_time");
 			timeElem.innerHTML = imgs.dataset.time;
+
+			var tempInsideElem = document.getElementById("id_temperature_inside");
+			tempInsideElem.innerHTML = imgs.dataset.temperature_inside;
+
+			var tempOutsideElem = document.getElementById("id_temperature_outside");
+			tempOutsideElem.innerHTML = imgs.dataset.temperature_outside;
 		}
 	</script>
 </body>
