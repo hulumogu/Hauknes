@@ -22,4 +22,5 @@
 # 
 # m h  dom mon dow   command
 2 * * * * /usr/bin/python3 /home/pi/work/TakePicture.py /home/pi/work/TakePicture.log 2>&1
+4 * * * * /usr/bin/python3 /home/pi/work/temperature.py /home/pi/work/temperature.log 2>&1
 5 * * * * /usr/bin/python3 /home/pi/work/SendFileToFtpServer.py /home/pi/work/SendFileToFtpServer.py 2>&1
