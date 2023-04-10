@@ -47,6 +47,21 @@
 		  height: 100%;
 		  width: 80%;
 		}
+
+		.container {
+		  position: relative;
+		}
+
+		/* Bottom right text */
+		.text-block {
+		  position: absolute;
+		  top: 20px;
+		  left: 20px;
+		  background-color: black;
+		  color: white;
+		  padding-left: 20px;
+		  padding-right: 20px;
+		}
 	</style>
 </head>
 
@@ -130,21 +145,31 @@
 	
 			for ($x = 0; $x <= $numPictures; $x++) 
 			{
+				echo "<div class='container'>";
 				echo "<img id='$x' src='../images/royslia/".$imageDataArray[$x][1]."_thumbnail.jpg' style='width:100%;' onclick='showImage(this);' data-time='".$imageDataArray[$x][3]."' data-date='".$imageDataArray[$x][2]."' data-temperature_inside='".$imageDataArray[$x][4]."' data-temperature_outside='".$imageDataArray[$x][5]."' >
 				<br>
 				";
+				echo "<div class='text-block'>";
+				echo $imageDataArray[$x][5]." ℃";
+				echo "</div>";
+				echo "</div>";
 			}
 		?>
 		</div>
 		<div class="right">
-			<img id="expandedImg" src='../images/royslia/<?php echo $imageDataArray[0][1]; ?>.jpg' style="width:100%;" >
+			<div class="container">
+				<img id="expandedImg" src='../images/royslia/<?php echo $imageDataArray[0][1]; ?>.jpg' style="width:100%;" >
+				<div class="text-block">
+					Temperature outside : <span id="id_temperature_outside"><?php echo $imageDataArray[0][5]; ?></span> ℃<br>
+					Temperature inside : <span id="id_temperature_inside"><?php echo $imageDataArray[0][4]; ?></span> ℃<br>
+					Date : <span id="id_date"><?php echo $imageDataArray[0][2]; ?></span><br>
+					Time : <span id="id_time"><?php echo $imageDataArray[0][3]; ?></span><br>
+				</div>
+			</div>
 		</div>
 	</div>	
 	<footer>
-		Date : <span id="id_date"><?php echo $imageDataArray[0][2]; ?></span><br>
-		Time : <span id="id_time"><?php echo $imageDataArray[0][3]; ?></span><br>
-		Temperature inside : <span id="id_temperature_inside"><?php echo $imageDataArray[0][4]; ?></span><br>
-		Temperature outside : <span id="id_temperature_outside"><?php echo $imageDataArray[0][5]; ?></span><br>
+		
 	</footer>
 
 	<script>
