@@ -17,7 +17,7 @@ for hourValue in hourValues:
    currentTime=(hourValue['start'].hour) 
    if currentPrice < minPrice:
        minPrice = currentPrice
-       minTime = CurrentTime
+       minTime = currentTime
    if currentPrice > maxPrice:
        maxPrice = currentPrice
        maxTime  = currentTime
