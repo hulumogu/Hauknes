@@ -14,13 +14,16 @@ minPrice = 100000
 maxPrice = 0
 for hourValue in hourValues:
    currentPrice = hourValue['value']
+   currentTime=(hourValue['start'].hour) 
    if currentPrice < minPrice:
        minPrice = currentPrice
+       minTime = CurrentTime
    if currentPrice > maxPrice:
        maxPrice = currentPrice
+       maxTime  = currentTime
     
    pprint('current price is ' + str(currentPrice) + ' starting at ' + str(hourValue['start'].hour)) 
   
-pprint('Max price is ' + str(maxPrice)) 
-pprint('Min price is ' + str(minPrice)) 
+pprint('Max price is ' + str(maxPrice) + ' starting at ' + str(maxTime)) 
+pprint('Min price is ' + str(minPrice) + ' starting at ' + str(minTime)) 
 
